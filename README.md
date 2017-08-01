@@ -1,6 +1,7 @@
 # atom-deepscan
 
 [![Version](https://img.shields.io/apm/v/atom-deepscan.svg?style=flat-square)](https://atom.io/packages/atom-deepscan)
+[![DeepScan Grade](https://deepscan.io/api/projects/337/branches/538/badge/grade.svg)](https://deepscan.io/dashboard/#view=project&pid=337&bid=538)
 
 Atom package to detect bugs and quality issues in JavaScript code including React. Works with [DeepScan](https://deepscan.io).
 
