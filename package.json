@@ -1,0 +1,96 @@
+{
+  "name": "atom-deepscan",
+  "main": "./src/main.js",
+  "version": "0.0.0",
+  "description": "Detect JavaScript and React bugs and quality issues more precisely",
+  "repository": "https://github.com/deepscan/atom-deepscan.git",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.13.0 <2.0.0"
+  },
+  "configSchema": {
+    "enable": {
+      "title": "Enable",
+      "description": "Enable or disable DeepScan package",
+      "type": "boolean",
+      "default": false,
+      "order": 1
+    },
+    "server": {
+      "title": "Server",
+      "description": "Set an url of DeepScan server",
+      "type": "string",
+      "default": "https://deepscan.io",
+      "order": 2
+    },
+    "ignoreConfirmWarning": {
+      "title": "Disable confirmation prompt on startup",
+      "description": "",
+      "type": "boolean",
+      "default": false,
+      "order": 3
+    },
+    "ignoreRules": {
+      "title": "Rules to be ignored",
+      "description": "Set rules you want to exclude e.g. UNUSED_DECL, BAD_WITH_STATEMENT",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "order": 4
+    }
+  },
+  "scripts": {
+    "test": "apm test"
+  },
+  "keywords": [
+    "javascript",
+    "jsx",
+    "react",
+    "linters"
+  ],
+  "dependencies": {
+    "atom-babel6-transpiler": "^1.1.1",
+    "babel-preset-node5": "^12.0.0",
+    "atom-linter": "^10.0.0",
+    "crypto-random-string": "^1.0.0",
+    "request": "^2.79.0"
+  },
+  "devDependencies": {},
+  "package-deps": [
+    "linter:2.0.0"
+  ],
+  "providedServices": {
+    "linter": {
+      "versions": {
+        "2.0.0": "provideLinter"
+      }
+    }
+  },
+  "consumedServices": {
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "consumeStatusBar"
+      }
+    }
+  },
+  "atomTranspilers": [
+    {
+      "glob": "{src,spec}/*.js",
+      "transpiler": "atom-babel6-transpiler",
+      "options": {
+        "babel": {
+          "presets": [
+            "node5"
+          ],
+          "sourceMaps": "inline",
+          "babelrc": false
+        },
+        "cacheKeyFiles": [
+          "package.json"
+        ]
+      }
+    }
+  ]
+}
