@@ -52,6 +52,7 @@
   ],
   "dependencies": {
     "atom-babel6-transpiler": "^1.1.1",
+    "atom-package-deps": "^4.6.0",
     "babel-preset-node5": "^12.0.0",
     "atom-linter": "^10.0.0",
     "crypto-random-string": "^1.0.0",

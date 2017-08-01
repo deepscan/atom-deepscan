@@ -7,7 +7,13 @@ const { createStatusTile, updateStatusTile } = require('./statusTile');
 const packageJSON = require('../package.json');
 
 module.exports = {
+    loadPackageDeps() {
+        require('atom-package-deps').install(packageJSON.name);
+    },
+
     activate() {
+        this.loadPackageDeps();
+
         this.emitter = new Emitter();
         this.subscriptions = new CompositeDisposable();
         this.worker = null;

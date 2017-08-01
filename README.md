@@ -9,7 +9,7 @@ DeepScan is a cutting-edge JavaScript code inspection tool that helps you to fin
 
 > **Note:**
 > To use this extension, you should confirm that your code is transferred to the DeepScan server for inspection when you save your changes.
-> You can confirm it by pressing the Confirm button that appears when restarting VS Code after the installation.
+> You can confirm it by pressing the Confirm button that appears when restarting Atom after the installation.
 >
 > Note that your code is completely deleted from the server right after the inspection.
 
@@ -23,6 +23,7 @@ apm install atom-deepscan
 
 ## How it works
 
+- You need [Linter](https://atom.io/packages/linter) package. Once Linter package is installed, just restart Atom.
 - Report issues in the Linter view when you open a JS or JSX file and save it.
 - Highlight issues in the code.
 - For support of `.jsx` file, include grammar of [atom-react](https://github.com/orktes/atom-react).
