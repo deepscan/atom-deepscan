@@ -1,7 +1,7 @@
 {
   "name": "atom-deepscan",
   "main": "./src/main.js",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Detect JavaScript and React bugs and quality issues more precisely",
   "repository": "https://github.com/deepscan/atom-deepscan.git",
   "license": "MIT",
