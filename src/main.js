@@ -22,7 +22,7 @@ module.exports = {
         this.statusBarTile = null;
         this.tileElement = null;
 
-        this.grammars = ['source.js', 'source.js.jsx'];
+        this.grammars = ['source.js', 'source.js.jsx', 'source.ts', 'source.tsx'];
         this.deepscanServer = this.getDeepScanConfiguration().server;
 
         this.subscriptions.add(this.emitter);
@@ -95,6 +95,7 @@ module.exports = {
         const response = await this.sendJob(this.worker, {
             type: 'inspect',
             content: text,
+            filepath: textEditor.getPath(),
             server: this.deepscanServer,
             userAgent: `${packageJSON.name}/${packageJSON.version}`
         });

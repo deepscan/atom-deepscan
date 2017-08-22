@@ -2,11 +2,12 @@
 
 /* global emit */
 
+import path from 'path';
 import request from 'request';
 
 const { Status } = require('./status');
 
-function inspect({ emitKey, server, userAgent, content }) {
+function inspect({ emitKey, server, userAgent, content, filepath }) {
     const URL = server + '/api/demo';
 
     if (!content) {
@@ -14,13 +15,14 @@ function inspect({ emitKey, server, userAgent, content }) {
         return;
     }
 
-    request.post({
+    // Send filename with extension to parse correctly in server
+    let filename = `demo${path.extname(filepath)}`;
+
+    let req = request.post({
         url: URL,
         headers : {
-            'content-type': 'application/octet-stream',
             'user-agent': userAgent
-        },
-        body: content
+        }
     }, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             let diagnostics = getResult(JSON.parse(body).data);
@@ -31,6 +33,11 @@ function inspect({ emitKey, server, userAgent, content }) {
             // Clear problems
             emit(emitKey, { status: Status.fail, diagnostics: [] });
         }
+    });
+    var form = req.form();
+    form.append('file', content, {
+        filename,
+        contentType: 'text/plain'
     });
 }
 
@@ -57,7 +64,7 @@ function makeDiagnostic(alarm) {
         source: 'deepscan',
         range: {
             start: { line: startLine, character: startChar },
-            end: { line: endLine, character: endChar }
+            end: { line: endLine, character: (endChar === startChar ? endChar + 1 : endChar) }
         },
         code: alarm.name
     };
@@ -89,10 +96,10 @@ function convertSeverity(impact) {
 
 module.exports = async function () {
     process.on('message', (jobConfig) => {
-        const { server, userAgent, content, type, emitKey } = jobConfig;
+        const { server, userAgent, content, filepath, type, emitKey } = jobConfig;
 
         if (type === 'inspect') {
-            inspect({ emitKey, server, userAgent, content });
+            inspect({ emitKey, server, userAgent, content, filepath });
         }
     });
 };

@@ -3,7 +3,7 @@
 [![Version](https://img.shields.io/apm/v/atom-deepscan.svg?style=flat-square)](https://atom.io/packages/atom-deepscan)
 [![DeepScan Grade](https://deepscan.io/api/projects/337/branches/538/badge/grade.svg)](https://deepscan.io/dashboard/#view=project&pid=337&bid=538)
 
-Atom package to detect bugs and quality issues in JavaScript code including React. Works with [DeepScan](https://deepscan.io).
+Atom package to detect bugs and quality issues in JavaScript/TypeScript code including React. Works with [DeepScan](https://deepscan.io).
 
 DeepScan is a cutting-edge JavaScript code inspection tool that helps you to find bugs and quality issues more precisely by data-flow analysis. You can also use it for React because DeepScan delivers [React specific rules](https://deepscan.io/docs/rules/#react).
 
@@ -27,6 +27,7 @@ apm install atom-deepscan
 - Report issues in the Linter view when you open a JS or JSX file and save it.
 - Highlight issues in the code.
 - For support of `.jsx` file, include grammar of [atom-react](https://github.com/orktes/atom-react).
+- For support of `.ts` and `.tsx` file, include grammar of [language-typescript-grammars-only](https://github.com/tcarlsen/language-typescript-grammars-only).
 
 ## Settings Options
 
