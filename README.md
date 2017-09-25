@@ -3,7 +3,7 @@
 [![Version](https://img.shields.io/apm/v/atom-deepscan.svg?style=flat-square)](https://atom.io/packages/atom-deepscan)
 [![DeepScan Grade](https://deepscan.io/api/projects/337/branches/538/badge/grade.svg)](https://deepscan.io/dashboard/#view=project&pid=337&bid=538)
 
-Atom package to detect bugs and quality issues in JavaScript/TypeScript code including React. Works with [DeepScan](https://deepscan.io).
+Atom package to detect bugs and quality issues in JavaScript, TypeScript and React. Works with [DeepScan](https://deepscan.io).
 
 DeepScan is a cutting-edge JavaScript code inspection tool that helps you to find bugs and quality issues more precisely by data-flow analysis. You can also use it for React because DeepScan delivers [React specific rules](https://deepscan.io/docs/rules/#react).
 
@@ -36,3 +36,5 @@ This plugin contributes the following variables to the settings:
 - `enable`: enable/disable DeepScan. Disabled by default. Enabled when you confirm.
 - `server`: set an url of DeepScan server. "https://deepscan.io" by default.
 - `ignoreRules`: set an array of rules to exclude.
+
+![Settings](https://github.com/deepscan/atom-deepscan/raw/master/settings.png)

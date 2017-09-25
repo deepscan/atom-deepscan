@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.1
+
+* Change description of package.json
+* Attach screenshot of Settings
+
 ## v1.1.0
 
 * TypeScript support: Support code inspection for `*.ts` and `*.tsx` files on save
