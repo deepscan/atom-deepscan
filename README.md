@@ -38,3 +38,13 @@ This plugin contributes the following variables to the settings:
 - `ignoreRules`: set an array of rules to exclude.
 
 ![Settings](https://github.com/deepscan/atom-deepscan/raw/master/settings.png)
+
+### Disabling Rules with Inline Comments
+
+While you can exclude rules project wide via `deepscan.ignoreRules` option, you can also disable a rule in a file using inline comment.
+```javascript
+const x = 0;
+x = 1; x + 1; // deepscan-disable-line UNUSED_EXPR
+```
+
+Read more about it [here](https://deepscan.io/docs/get-started/disabling-rules/).

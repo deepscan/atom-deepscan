@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.1.2
+
+* Support to disable rules with inline comments. Check it [here](https://deepscan.io/docs/get-started/disabling-rules/).
+
 ## v1.1.1
 
 * Change description of package.json
