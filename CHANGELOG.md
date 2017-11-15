@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.3
+
+* Not to analyze a file over 30,000 lines
+* Show a proper status and message when the active editor is changed
+
 ## v1.1.2
 
 * Support to disable rules with inline comments. Check it [here](https://deepscan.io/docs/get-started/disabling-rules/).

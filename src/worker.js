@@ -7,16 +7,22 @@ import request from 'request';
 
 const { Status } = require('./status');
 
-function inspect({ emitKey, server, userAgent, content, filepath }) {
+function inspect({ emitKey, server, userAgent, content, filePath, lineCount }) {
     const URL = server + '/api/demo';
+    const MAX_LINES = 30000;
 
     if (!content) {
         emit(emitKey, { status: Status.none, diagnostics: [] });
         return;
     }
 
+    if (lineCount >= MAX_LINES) {
+        emit(emitKey, { status: Status.fail, diagnostics: [], message: `We do not support above ${MAX_LINES} lines.` });
+        return;
+    }
+
     // Send filename with extension to parse correctly in server
-    let filename = `demo${path.extname(filepath)}`;
+    let filename = `demo${path.extname(filePath)}`;
 
     let req = request.post({
         url: URL,
@@ -96,10 +102,10 @@ function convertSeverity(impact) {
 
 module.exports = async function () {
     process.on('message', (jobConfig) => {
-        const { server, userAgent, content, filepath, type, emitKey } = jobConfig;
+        const { server, userAgent, content, filePath, lineCount, type, emitKey } = jobConfig;
 
         if (type === 'inspect') {
-            inspect({ emitKey, server, userAgent, content, filepath });
+            inspect({ emitKey, server, userAgent, content, filePath, lineCount });
         }
     });
 };

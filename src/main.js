@@ -1,6 +1,7 @@
 'use babel';
 
 import { CompositeDisposable, Emitter, Task } from 'atom';
+import { generateRange } from 'atom-linter';
 import cryptoRandomString from 'crypto-random-string';
 
 const { createStatusTile, updateStatusTile } = require('./statusTile');
@@ -55,6 +56,8 @@ module.exports = {
         initializeWorker();
 
         this.checkSetting();
+
+        this.subscriptions.add(atom.workspace.onDidChangeActiveTextEditor(this.updateStatusBar.bind(this)));
     },
 
     deactivate() {
@@ -75,7 +78,54 @@ module.exports = {
             lint: async (textEditor) => {
                 if (!this.getDeepScanConfiguration().enable)
                     return [];
-                return this.inspect(textEditor);
+
+                if (!atom.workspace.isTextEditor(textEditor)) {
+                    return null;
+                }
+
+                const filePath = textEditor.getPath();
+                if (!filePath) {
+                    return null;
+                }
+
+                const text = textEditor.getText();
+
+                let response;
+                try {
+                    response = await this.sendJob(this.worker, {
+                        type: 'inspect',
+                        content: text,
+                        filePath: textEditor.getPath(),
+                        lineCount: textEditor.getLineCount(),
+                        server: this.deepscanServer,
+                        userAgent: `${packageJSON.name}/${packageJSON.version}`
+                    });
+
+                    if (textEditor.getText() !== text) {
+                        return null;
+                    }
+
+                    const diagnostics = await this.publishDiagnostics(response, textEditor, this.worker);
+                    // Save editor's status to update status bar when the activ
+                    textEditor.status = {
+                        status: response.status,
+                        message: response.message
+                    };
+                    this.updateStatusBar(textEditor);
+                    // NOTE:
+                    // It seems async result for lint() might be ignored when files are initially opened.
+                    // So, linting result for such a file is not displayed.
+                    return diagnostics;
+                } catch (e) {
+                    return [{
+                        severity: 'error',
+                        location: {
+                            file: textEditor.getPath(),
+                            position: generateRange(textEditor) // 1:1
+                        },
+                        excerpt: e.message
+                    }];
+                }
             }
         }
     },
@@ -86,22 +136,10 @@ module.exports = {
         return atom.commands.dispatch(view, 'linter:lint');
     },
 
-    async inspect(textEditor) {
-        const text = textEditor.getText();
-        if (text.length === 0) {
-            return [];
+    updateStatusBar(editor) {
+        if (atom.workspace.getActiveTextEditor() === editor) {
+            updateStatusTile(this.subscriptions, this.tileElement, editor ? editor.status : null);
         }
-
-        const response = await this.sendJob(this.worker, {
-            type: 'inspect',
-            content: text,
-            filepath: textEditor.getPath(),
-            server: this.deepscanServer,
-            userAgent: `${packageJSON.name}/${packageJSON.version}`
-        });
-        let diagnostics = await this.publishDiagnostics(response, textEditor, this.worker);
-        updateStatusTile(this.subscriptions, this.tileElement, response.status);
-        return diagnostics;
     },
 
     async sendJob(worker, config) {
@@ -135,13 +173,14 @@ module.exports = {
 
     async publishDiagnostics(response, textEditor, worker) {
         function slugify(text) {
-            return text.toString().toLowerCase()
-                                  .replace(/\s+/g, '-')     // Replace spaces with -
-                                  .replace(/[^\w\-]+/g, '') // Remove all non-word chars
-                                  .replace(/\_/g, '-')      // Replace _ with -
-                                  .replace(/\-\-+/g, '-')   // Replace multiple - with single -
-                                  .replace(/^-+/, '')       // Trim - from start of text
-                                  .replace(/-+$/, '');      // Trim - from end of text
+            return text.toString()
+                       .toLowerCase()
+                       .replace(/\s+/g, '-')     // Replace spaces with -
+                       .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+                       .replace(/\_/g, '-')      // Replace _ with -
+                       .replace(/\-\-+/g, '-')   // Replace multiple - with single -
+                       .replace(/^-+/, '')       // Trim - from start of text
+                       .replace(/-+$/, '');      // Trim - from end of text
         }
 
         const filePath = textEditor.getPath();
@@ -182,7 +221,7 @@ module.exports = {
                 item: this.tileElement,
                 priority: 1000,
             });
-            updateStatusTile(this.subscriptions, this.tileElement);
+            this.updateStatusBar(this.subscriptions, this.tileElement);
         }
     },
 

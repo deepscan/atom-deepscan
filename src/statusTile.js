@@ -18,29 +18,33 @@ module.exports = {
         return element;
     },
 
-    updateStatusTile(disposable, element, status) {
-        let message = '';
+    updateStatusTile(disposable, element, statusInfo) {
+        let title = '';
 
-        if (status) {
-            element.classList.remove(Status[Status.ok], Status[Status.warn], Status[Status.fail]);
-            element.classList.add(Status[status]);
+        if (!statusInfo) {
+            return;
+        }
 
-            switch (status) {
-            case Status.ok:
-                message = 'Issue-free!';
-                break;
-            case Status.warn:
-                message = 'Issue(s) detected!';
-                break;
-            case Status.fail:
-                message = 'Inspection failed!';
-            }
+        const {status, message} = statusInfo;
+
+        element.classList.remove(Status[Status.ok], Status[Status.warn], Status[Status.fail]);
+        element.classList.add(Status[status]);
+
+        switch (status) {
+        case Status.ok:
+            title = 'Issue-free!';
+            break;
+        case Status.warn:
+            title = 'Issue(s) detected!';
+            break;
+        case Status.fail:
+            title = 'Inspection failed!';
         }
 
         disposeTooltip();
 
         let tooltip = atom.tooltips.add(element, {
-            title: `${message}`
+            title: `${title} ${message || ''}`
         });
         setTooltip(tooltip);
         disposable.add(tooltip);
