@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.2.0
+
+* Vue.js support: Support code inspection for `*.vue` files on save
+
 ## v1.1.3
 
 * Not to analyze a file over 30,000 lines

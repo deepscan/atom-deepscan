@@ -23,7 +23,7 @@ module.exports = {
         this.statusBarTile = null;
         this.tileElement = null;
 
-        this.grammars = ['source.js', 'source.js.jsx', 'source.ts', 'source.tsx'];
+        this.grammars = ['source.js', 'source.js.jsx', 'source.ts', 'source.tsx', 'text.html.vue'];
         this.deepscanServer = this.getDeepScanConfiguration().server;
 
         this.subscriptions.add(this.emitter);
