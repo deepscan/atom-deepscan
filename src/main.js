@@ -216,14 +216,14 @@ module.exports = {
                 };*/
                 let description = '', rule;
                 if (rules && (rule = rules.find(rule => rule.key === code))) {
-                    const tags = rule.tag.length > 0 ? rule.tag : 'No tags';
+                    const tags = rule.tag.filter(tag => tag);
                     let content = `<ul class="deepscan-rule-detail">
                                     <li class="deepscan-rule-detail-property">`;
                         rule.severity.forEach(severity => {
                             content += `<span class="severity" data-severity="${severity}"><i class="circle"></i>${severity}</span>`;
                         });
                         content += `<li class="deepscan-rule-detail-property"><span class="icon icon-${rule.type === 'Error' ? 'error' : 'code-quality'}"></span> ${rule.type}
-                                    <li class="deepscan-rule-detail-property"><span class="icon icon-tags"></span> ${tags}
+                                    <li class="deepscan-rule-detail-property"><span class="icon icon-tags"></span> ${tags.length > 0 ? tags.join(', ') : 'No tags'}
                                    </ul>
                                    <div class="deepscan-rule-description">
                                        <h4>${rule.name}</h4>
