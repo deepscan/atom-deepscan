@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.3.0
+
+* Show rule description when a user toggles the description in the message
+* Update rule definition (1.12.0-beta)
+
 ## v1.2.0
 
 * Vue.js support: Support code inspection for `*.vue` files on save

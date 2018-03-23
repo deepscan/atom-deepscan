@@ -3,9 +3,13 @@
 import { CompositeDisposable, Emitter, Task } from 'atom';
 import { generateRange } from 'atom-linter';
 import cryptoRandomString from 'crypto-random-string';
+import marked from 'marked';
+
+const fs = require('fs');
 
 const { createStatusTile, updateStatusTile } = require('./statusTile');
 const packageJSON = require('../package.json');
+const rules = require('../resources/deepscan-rules.json').rules;
 
 module.exports = {
     loadPackageDeps() {
@@ -25,6 +29,13 @@ module.exports = {
 
         this.grammars = ['source.js', 'source.js.jsx', 'source.ts', 'source.tsx', 'text.html.vue'];
         this.deepscanServer = this.getDeepScanConfiguration().server;
+
+        this.style = null;
+        try {
+            this.style = fs.readFileSync(`${__dirname}/style.css`, 'utf8');
+        } catch (e) {
+            console.error(e);
+        }
 
         this.subscriptions.add(this.emitter);
 
@@ -199,6 +210,27 @@ module.exports = {
             }).map(async ({
                 message, severity, code, range
             }) => {
+                /*let linterFix = {
+                    position: new Range(),
+                    replaceWith: ''
+                };*/
+                let description = '', rule;
+                if (rules && (rule = rules.find(rule => rule.key === code))) {
+                    const tags = rule.tag.length > 0 ? rule.tag : 'No tags';
+                    let content = `<ul class="deepscan-rule-detail">
+                                    <li class="deepscan-rule-detail-property">`;
+                        rule.severity.forEach(severity => {
+                            content += `<span class="severity" data-severity="${severity}"><i class="circle"></i>${severity}</span>`;
+                        });
+                        content += `<li class="deepscan-rule-detail-property"><span class="icon icon-${rule.type === 'Error' ? 'error' : 'code-quality'}"></span> ${rule.type}
+                                    <li class="deepscan-rule-detail-property"><span class="icon icon-tags"></span> ${tags}
+                                   </ul>
+                                   <div class="deepscan-rule-description">
+                                       <h4>${rule.name}</h4>
+                                       <div>${marked(rule.description)}</div>
+                                   </div>`;
+                    description = `<style>${this.style}</style><div class="deepscan-rule">${content}</div>`;
+                }
                 let ret = {
                     severity,
                     location: {
@@ -206,7 +238,9 @@ module.exports = {
                         position: [[range.start.line, range.start.character], [range.end.line, range.end.character]]
                     },
                     url: `https://deepscan.io/docs/rules/${slugify(code)}`,
-                    excerpt: `${message} (${code})`
+                    excerpt: `${message} (${code})`,
+                    /*solutions: [linterFix] // 'Fix' button*/
+                    description
                 }
 
                 return ret;

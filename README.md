@@ -13,7 +13,7 @@ DeepScan is a cutting-edge JavaScript code inspection tool that helps you to fin
 >
 > Note that your code is completely deleted from the server right after the inspection.
 
-![Navigation](https://github.com/deepscan/atom-deepscan/raw/master/preview.png)
+![Navigation](https://github.com/deepscan/atom-deepscan/raw/master/resources/preview.png)
 
 ## Installation
 
@@ -38,7 +38,7 @@ This plugin contributes the following variables to the settings:
 - `server`: set an url of DeepScan server. "https://deepscan.io" by default.
 - `ignoreRules`: set an array of rules to exclude.
 
-![Settings](https://github.com/deepscan/atom-deepscan/raw/master/settings.png)
+![Settings](https://github.com/deepscan/atom-deepscan/raw/master/resources/settings.png)
 
 ### Disabling Rules with Inline Comments
 
