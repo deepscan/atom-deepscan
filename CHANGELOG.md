@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.4.0
+
+* Show errors with inline decorators
+* Update rule definition (1.13.0-beta)
+
 ## v1.3.0
 
 * Show rule description when a user toggles the description in the message

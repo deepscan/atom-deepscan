@@ -29,6 +29,7 @@ module.exports = {
 
         this.grammars = ['source.js', 'source.js.jsx', 'source.ts', 'source.tsx', 'text.html.vue'];
         this.deepscanServer = this.getDeepScanConfiguration().server;
+        this.showDecorators = this.getDeepScanConfiguration().showDecorators;
 
         this.style = null;
         try {
@@ -40,8 +41,8 @@ module.exports = {
         this.subscriptions.add(this.emitter);
 
         this.subscriptions.add(atom.config.observe(`${packageJSON.name}.server`, (value) => {
-            let oldServer = this.deepscanServer;
-            if (value === oldServer) {
+            let oldValue = this.deepscanServer;
+            if (value === oldValue) {
                 return;
             }
             this.deepscanServer = value;
@@ -56,9 +57,13 @@ module.exports = {
             documents.forEach(this.runLinter);
         }));
 
-        this.subscriptions.add(atom.workspace.observeTextEditors((editor) => {
-            editor.onDidSave(async () => {
-            });
+        this.subscriptions.add(atom.config.observe(`${packageJSON.name}.showDecorators`, (value) => {
+            let oldValue = this.showDecorators;
+            if (value === oldValue) {
+                return;
+            }
+            this.showDecorators = value;
+            atom.workspace.getTextEditors().forEach((editor) => this.updateDecorations(editor));
         }));
 
         const initializeWorker = () => {
@@ -69,6 +74,32 @@ module.exports = {
         this.checkSetting();
 
         this.subscriptions.add(atom.workspace.onDidChangeActiveTextEditor(this.updateStatusBar.bind(this)));
+
+        this.decoratorMessagesId = 0;
+        this.editorsMap = new Map();
+
+        this.subscriptions.add(atom.workspace.observeTextEditors((editor) => {
+            editor.onDidDestroy(() => {
+                this.editorsMap.delete(editor.id);
+            });
+        }));
+    },
+
+    getEditorObject(editor) {
+        let obj = this.editorsMap.get(editor.id);
+        if (!obj) {
+            const styleElement = document.createElement('style');
+            styleElement.type = 'text/css';
+            const parentElement = atom.views.getView(editor).component.rootElement ? atom.views.getView(editor).component.rootElement.parentNode.children[0] : document.head;
+            parentElement.appendChild(styleElement);
+    
+            this.editorsMap.set(editor.id, {
+                styleElement,
+                markers: [],
+                diagnostics: []
+            });
+        }
+        return this.editorsMap.get(editor.id);
     },
 
     deactivate() {
@@ -117,12 +148,17 @@ module.exports = {
                     }
 
                     const diagnostics = await this.publishDiagnostics(response, textEditor, this.worker);
-                    // Save editor's status to update status bar when the activ
+
                     textEditor.status = {
                         status: response.status,
                         message: response.message
                     };
                     this.updateStatusBar(textEditor);
+
+                    const editorObj = this.getEditorObject(textEditor);
+                    editorObj.diagnostics = [...diagnostics];
+                    this.updateDecorations(textEditor);
+
                     // NOTE:
                     // It seems async result for lint() might be ignored when files are initially opened.
                     // So, linting result for such a file is not displayed.
@@ -151,6 +187,47 @@ module.exports = {
         if (atom.workspace.getActiveTextEditor() === editor) {
             updateStatusTile(this.subscriptions, this.tileElement, editor ? editor.status : null);
         }
+    },
+
+    updateDecorations(editor) {
+        const isError = (severity) => severity === 'error';
+        const compareSeverity = (obj1, obj2) => {
+            const a = isError(obj1.severity) ? 0 : 1;
+            const b = isError(obj2.severity) ? 0 : 1;
+            return b - a;
+        };
+
+        const { styleElement, markers, diagnostics } = this.getEditorObject(editor);
+        styleElement.innerHTML = '';
+
+        if (!this.showDecorators) {
+            markers.forEach((marker) => marker.destroy());
+            markers.splice(0, markers.length);
+            return;
+        }
+
+        let style = '';
+        // 1. Sort by severity as desc because the first decoration is taken when there are decorations on the same line.
+        let result = diagnostics.sort(compareSeverity);
+        // 2. Display only 'error' (Medium/High impact)
+        result = result.filter(({ severity }) => isError(severity));
+        for (let diagnostic of result) {
+            const {excerpt, location} = diagnostic;
+            let startRow = 0;
+            if (Array.isArray(location.position)) {
+                startRow = location.position[0][0];
+            } else { // Range
+                startRow = location.position.start.row;
+            }
+            const element = document.createElement('div');
+            const clazz = `deepscan-decorator-${++this.decoratorMessagesId}`;
+            const text = `  ← ${excerpt}`;
+            style += `.${clazz}::after { content: "${CSS.escape(text)}" }`;
+            const marker = editor.markBufferPosition([startRow, 0], {invalidate: 'never'});
+            editor.decorateMarker(marker, {type: 'line', position: 'after', item: element, class: `deepscan-marker ${clazz}`});
+            markers.push(marker);
+        }
+        styleElement.innerHTML += style;
     },
 
     async sendJob(worker, config) {
@@ -195,7 +272,7 @@ module.exports = {
         }
 
         const filePath = textEditor.getPath();
-        let config = this.getDeepScanConfiguration();
+        const config = this.getDeepScanConfiguration();
 
         if (response.diagnostics.length === 0) {
             return new Promise(function (resolve) {
