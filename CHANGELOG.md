@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.4.1
+
+* Update rule definition (1.14.0-beta)
+* Sanitize HTML in markdown
+
 ## v1.4.0
 
 * Show errors with inline decorators

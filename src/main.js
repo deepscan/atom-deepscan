@@ -304,7 +304,7 @@ module.exports = {
                                    </ul>
                                    <div class="deepscan-rule-description">
                                        <h4>${rule.name}</h4>
-                                       <div>${marked(rule.description)}</div>
+                                       <div>${marked(rule.description, { sanitize: true })}</div>
                                    </div>`;
                     description = `<style>${this.style}</style><div class="deepscan-rule">${content}</div>`;
                 }
