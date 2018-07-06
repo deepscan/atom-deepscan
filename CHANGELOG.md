@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.4.2
+
+* Update rule definition (1.15.0-beta)
+
 ## v1.4.1
 
 * Update rule definition (1.14.0-beta)
