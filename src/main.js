@@ -82,6 +82,9 @@ module.exports = {
             editor.onDidDestroy(() => {
                 this.editorsMap.delete(editor.id);
             });
+            editor.onDidChange(() => {
+                this.clearDecorations(editor);
+            })
         }));
     },
 
@@ -189,6 +192,17 @@ module.exports = {
         }
     },
 
+    clearDecorations(editor) {
+        const { styleElement, markers } = this.getEditorObject(editor);
+
+        if (styleElement.innerHTML.length !== 0) {
+            styleElement.innerHTML = '';
+        }
+
+        markers.forEach((marker) => marker.destroy());
+        markers.splice(0, markers.length);
+    },
+
     updateDecorations(editor) {
         const isError = (severity) => severity === 'error';
         const compareSeverity = (obj1, obj2) => {
@@ -197,14 +211,13 @@ module.exports = {
             return b - a;
         };
 
-        const { styleElement, markers, diagnostics } = this.getEditorObject(editor);
-        styleElement.innerHTML = '';
+        this.clearDecorations(editor);
 
         if (!this.showDecorators) {
-            markers.forEach((marker) => marker.destroy());
-            markers.splice(0, markers.length);
             return;
         }
+
+        const { styleElement, markers, diagnostics } = this.getEditorObject(editor);
 
         let style = '';
         // 1. Sort by severity as desc because the first decoration is taken when there are decorations on the same line.
