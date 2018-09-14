@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.4.5
+
+* Update rule definition (1.17.0-beta)
+
 ## v1.4.4
 
 * For less noise, hide inline decorators when typing
