@@ -2,7 +2,7 @@
 
 ## 1.4.6
 
-- Polish the description of settings
+* Polish the description of settings
 
 ## v1.4.5
 
