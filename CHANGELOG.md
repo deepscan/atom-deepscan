@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.6
+
+- Polish the description of settings
+
 ## v1.4.5
 
 * Update rule definition (1.17.0-beta)

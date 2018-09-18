@@ -3,7 +3,7 @@
 [![Version](https://img.shields.io/apm/v/atom-deepscan.svg?style=flat-square)](https://atom.io/packages/atom-deepscan)
 [![DeepScan Grade](https://deepscan.io/api/projects/337/branches/538/badge/grade.svg)](https://deepscan.io/dashboard/#view=project&pid=337&bid=538)
 
-Atom package to detect bugs and quality issues in JavaScript, TypeScript and React. Works with [DeepScan](https://deepscan.io).
+Atom package to detect bugs and quality issues in JavaScript, TypeScript, React and Vue.js. Works with [DeepScan](https://deepscan.io).
 
 DeepScan is a cutting-edge JavaScript code inspection tool that helps you to find bugs and quality issues more precisely by data-flow analysis. You can also use it for React and Vue.js because DeepScan delivers [React specialized rules](https://deepscan.io/docs/rules/#react) and [Vue.js specialized rules](https://deepscan.io/docs/rules/#vue).
 

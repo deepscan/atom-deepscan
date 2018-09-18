@@ -1,8 +1,8 @@
 {
   "name": "atom-deepscan",
   "main": "./src/main.js",
-  "version": "1.4.5",
-  "description": "Detect bugs and quality issues in JavaScript, TypeScript and React more precisely",
+  "version": "1.4.6",
+  "description": "Detect bugs and quality issues in JavaScript, TypeScript, React and Vue.js more precisely",
   "repository": "https://github.com/deepscan/atom-deepscan.git",
   "license": "MIT",
   "engines": {
@@ -11,20 +11,20 @@
   "configSchema": {
     "enable": {
       "title": "Enable",
-      "description": "Enable or disable DeepScan package",
+      "description": "Controls whether DeepScan inspection should be enabled",
       "type": "boolean",
       "default": false,
       "order": 1
     },
     "server": {
       "title": "Server",
-      "description": "Set an url of DeepScan server",
+      "description": "Configures the DeepScan server url",
       "type": "string",
       "default": "https://deepscan.io",
       "order": 2
     },
     "ignoreConfirmWarning": {
-      "title": "Disable confirmation prompt on startup",
+      "title": "Controls whether you allow transferring your code to the DeepScan server without prompt. Transferred code is completely deleted right after the inspection.",
       "description": "",
       "type": "boolean",
       "default": false,
@@ -32,7 +32,7 @@
     },
     "ignoreRules": {
       "title": "Rules to be ignored",
-      "description": "Set rules you want to exclude e.g. UNUSED_DECL, BAD_WITH_STATEMENT",
+      "description": "Configures the rules to be ignored. e.g., UNUSED_DECL, BAD_WITH_STATEMENT",
       "type": "array",
       "items": {
         "type": "string"
@@ -42,7 +42,7 @@
     },
     "showDecorators": {
       "title": "Show inline decorators",
-      "description": "Show or hide inline decorators regarding errors",
+      "description": "Controls whether the problem of the code should be shown along with the code",
       "type": "boolean",
       "default": true,
       "order": 5
