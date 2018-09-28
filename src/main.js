@@ -28,8 +28,10 @@ module.exports = {
         this.tileElement = null;
 
         this.grammars = ['source.js', 'source.js.jsx', 'source.ts', 'source.tsx', 'text.html.vue'];
-        this.deepscanServer = this.getDeepScanConfiguration().server;
-        this.showDecorators = this.getDeepScanConfiguration().showDecorators;
+        const config = this.getDeepScanConfiguration();
+        this.deepscanServer = config.server;
+        this.showDecorators = config.showDecorators;
+        this.showFullDescription = config.showDecorators;
 
         this.style = null;
         try {
@@ -47,14 +49,7 @@ module.exports = {
             }
             this.deepscanServer = value;
             console.info(`Configuration changed: ${this.deepscanServer}`);
-            // Reinspect any open text documents
-            let documents = [];
-            for (let editor of atom.workspace.getTextEditors()) {
-                if (this.grammars.includes(editor.getGrammar().scopeName)) {
-                    documents.push(editor);
-                }
-            }
-            documents.forEach(this.runLinter);
+            this.reinspectDocuments();
         }));
 
         this.subscriptions.add(atom.config.observe(`${packageJSON.name}.showDecorators`, (value) => {
@@ -64,6 +59,15 @@ module.exports = {
             }
             this.showDecorators = value;
             atom.workspace.getTextEditors().forEach((editor) => this.updateDecorations(editor));
+        }));
+
+        this.subscriptions.add(atom.config.observe(`${packageJSON.name}.showFullDescription`, (value) => {
+            let oldValue = this.showFullDescription;
+            if (value === oldValue) {
+                return;
+            }
+            this.showFullDescription = value;
+            this.reinspectDocuments();
         }));
 
         const initializeWorker = () => {
@@ -86,6 +90,17 @@ module.exports = {
                 this.clearDecorations(editor);
             })
         }));
+    },
+
+    reinspectDocuments() {
+        // Reinspect any open text documents
+        let documents = [];
+        for (let editor of atom.workspace.getTextEditors()) {
+            if (this.grammars.includes(editor.getGrammar().scopeName)) {
+                documents.push(editor);
+            }
+        }
+        documents.forEach(this.runLinter);
     },
 
     getEditorObject(editor) {
@@ -182,7 +197,7 @@ module.exports = {
 
     runLinter(editor) {
         let view = atom.views.getView(editor);
-        console.log('runLinter', view);
+        // NOTE: lint() is not called (https://github.com/steelbrain/linter/issues/1511)
         return atom.commands.dispatch(view, 'linter:lint');
     },
 
@@ -319,7 +334,13 @@ module.exports = {
                                        <h4>${rule.name}</h4>
                                        <div>${marked(rule.description, { sanitize: true })}</div>
                                    </div>`;
-                    description = `<style>${this.style}</style><div class="deepscan-rule">${content}</div>`;
+
+                        // atom-ide-diagnostics supports the description unlike linter.
+                        //  1) Full description is shown by default instead of collapsed way (https://github.com/facebook-atom/atom-ide-ui/issues/40)
+                        //  2) Raw HTML is not rendered (https://github.com/facebook-atom/atom-ide-ui/issues/99)
+                        if (this.showFullDescription) {
+                            description = `<style>${this.style}</style><div class="deepscan-rule">${content}</div>`;
+                        }
                 }
                 let ret = {
                     severity,

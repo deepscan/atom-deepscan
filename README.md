@@ -34,9 +34,11 @@ apm install atom-deepscan
 
 This plugin contributes the following variables to the settings:
 
-- `enable`: enable/disable DeepScan. Disabled by default. Enabled when you confirm.
-- `server`: set an url of DeepScan server. "https://deepscan.io" by default.
-- `ignoreRules`: set an array of rules to exclude.
+- `enable`: Enable/disable DeepScan inspection. Disabled by default. Enabled when you confirm.
+- `server`: Set an url of DeepScan server. "https://deepscan.io" by default.
+- `ignoreRules`: Set an array of rules to exclude.
+- `showDecorators`: Controls whether the problem of the code should be shown along with the code.
+- `showFullDescription`: Controls whether the full description of the issue should be shown when you hover it. Applied after reopening the file.
 
 ![Settings](https://github.com/deepscan/atom-deepscan/raw/master/resources/settings.png)
 

@@ -1,6 +1,10 @@
 # Changelog
 
-## 1.4.6
+## v1.4.7
+
+* Provide an option to show/hide a full description of the message (for atom-ide-ui package, thanks to [@selfagency](https://github.com/deepscan/atom-deepscan/issues/2))
+
+## v1.4.6
 
 * Polish the description of settings
 

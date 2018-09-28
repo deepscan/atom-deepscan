@@ -1,7 +1,7 @@
 {
   "name": "atom-deepscan",
   "main": "./src/main.js",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "Detect bugs and quality issues in JavaScript, TypeScript, React and Vue.js more precisely",
   "repository": "https://github.com/deepscan/atom-deepscan.git",
   "license": "MIT",
@@ -46,6 +46,13 @@
       "type": "boolean",
       "default": true,
       "order": 5
+    },
+    "showFullDescription": {
+      "title": "Show full description",
+      "description": "Controls whether the full description of the issue should be shown when you hover it. Applied after reopening the file.",
+      "type": "boolean",
+      "default": true,
+      "order": 6
     }
   },
   "scripts": {
