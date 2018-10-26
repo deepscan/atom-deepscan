@@ -51,3 +51,5 @@ x = 1; x + 1; // deepscan-disable-line UNUSED_EXPR
 ```
 
 Read more about it [here](https://deepscan.io/docs/get-started/disabling-rules/).
+
+## How to contribute
