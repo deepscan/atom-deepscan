@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.5.0
+
+* Update rule definition (1.22.0)
+* Support ECMAScript Modules file (`*.mjs`)
+
 ## v1.4.11
 
 * Update rule definition (1.21.0)

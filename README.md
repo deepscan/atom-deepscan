@@ -24,7 +24,7 @@ apm install atom-deepscan
 ## How it works
 
 - You need [Linter](https://atom.io/packages/linter) package. Once Linter package is installed, just restart Atom.
-- Report issues in the Linter view when you open a JS or JSX file and save it.
+- Report issues in the Linter view when you open a `*.js`, `*.jsx`, `*.mjs`, `*.ts`, `*.tsx`, and `*.vue` file and save it.
 - Highlight issues in the code.
 - For support of `.jsx` file, include a grammar of [atom-react](https://github.com/orktes/atom-react).
 - For support of `.ts` and `.tsx` file, include a grammar of [language-typescript-grammars-only](https://github.com/tcarlsen/language-typescript-grammars-only).
