@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.5.2
+
+* Update rule definition (1.24.0)
+* For rules overlapping with ESLint, DeepScan now recognizes ESLint inline disable comments and filters out alarms when the corresponding ESLint alarm is disabled.
+
 ## v1.5.1
 
 * Update rule definition (1.23.0)
