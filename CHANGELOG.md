@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.5.9
+
+* Update rule definition (1.32.0)
+* For the analysis improvements, see [this updates](https://deepscan.io/docs/updates/2019-12/)
+* Strip a trailing slash of the server url
+
 ## v1.5.8
 
 * Update rule definition (1.31.0)

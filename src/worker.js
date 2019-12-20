@@ -8,7 +8,7 @@ import request from 'request';
 const { Status } = require('./status');
 
 function inspect({ emitKey, server, userAgent, content, filePath, lineCount }) {
-    const URL = server + '/api/demo';
+    const URL = server.replace(/\/$/, '') + '/api/demo';
     const MAX_LINES = 30000;
 
     if (!content) {
