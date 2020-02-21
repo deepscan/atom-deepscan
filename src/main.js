@@ -322,18 +322,13 @@ module.exports = {
                 let description = '', rule;
                 if (rules && (rule = rules.find(rule => rule.key === code))) {
                     const tags = rule.tag.filter(tag => tag);
-                    let content = `<ul class="deepscan-rule-detail">
-                                    <li class="deepscan-rule-detail-property">`;
+                    // Extra whitespaces might cause unexpected escaping behavior so just use '\n' in one line (https://github.com/steelbrain/linter/issues/1407)
+                    let content = `<ul class="deepscan-rule-detail">\n <li class="deepscan-rule-detail-property">`;
                         rule.severity.forEach(severity => {
                             content += `<span class="severity" data-severity="${severity}"><i class="circle"></i>${severity}</span>`;
                         });
-                        content += `<li class="deepscan-rule-detail-property"><span class="icon icon-${rule.type === 'Error' ? 'error' : 'code-quality'}"></span> ${rule.type}
-                                    <li class="deepscan-rule-detail-property"><span class="icon icon-tags"></span> ${tags.length > 0 ? tags.join(', ') : 'No tags'}
-                                   </ul>
-                                   <div class="deepscan-rule-description">
-                                       <h4>${rule.name}</h4>
-                                       <div>${marked(rule.description, { sanitize: true })}</div>
-                                   </div>`;
+                        content += `</li>\n <li class="deepscan-rule-detail-property"><span class="icon icon-${rule.type === 'Error' ? 'error' : 'code-quality'}"></span> ${rule.type}</li> \n <li class="deepscan-rule-detail-property"><span class="icon icon-tags"></span> ${tags.length > 0 ? tags.join(', ') : 'No tags'}</li>
+                                   </ul>\n <div class="deepscan-rule-description">\n <h4>${rule.name}</h4>\n <div>${marked(rule.description, { sanitize: true })}</div>\n </div>`;
 
                         // atom-ide-diagnostics supports the description unlike linter.
                         //  1) Full description is shown by default instead of collapsed way (https://github.com/facebook-atom/atom-ide-ui/issues/40)

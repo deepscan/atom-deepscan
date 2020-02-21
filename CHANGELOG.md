@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.5.11
+
+* Update rule definition (1.34.0)
+* For the analysis improvements, see [this updates](https://deepscan.io/docs/updates/2020-02/)
+* Fix an unexpected HTML escaping for the rule description
+
 ## v1.5.10
 
 * Update rule definition (1.33.0)
