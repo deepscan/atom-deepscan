@@ -51,3 +51,12 @@ x = 1; x + 1; // deepscan-disable-line UNUSED_EXPR
 ```
 
 Read more about it [here](https://deepscan.io/docs/get-started/disabling-rules/).
+
+## Using behind a proxy
+
+To do an inspection, this extension requires a connection with the DeepScan server. But this connection cannot be established when you are behind a proxy.
+
+For this case, you can try one of the following:
+
+* Set `http_proxy` environment variable: `http_proxy` [is respected](https://www.npmjs.com/package/axios#request-config), if any.
+* Set **Proxy** option: When you do not have/want a system-wide `http_proxy` environment variable, you can set the proxy server's URL in the **Proxy** option.

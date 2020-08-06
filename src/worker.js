@@ -3,12 +3,13 @@
 /* global emit */
 
 import path from 'path';
-import request from 'request';
+import axios from 'axios';
+import FormData from 'form-data';
 
 const { Status } = require('./status');
 
-function inspect({ emitKey, server, userAgent, content, filePath, lineCount }) {
-    const URL = server.replace(/\/$/, '') + '/api/demo';
+function inspect({ emitKey, server, proxyServer, userAgent, content, filePath, lineCount }) {
+    const url = server.replace(/\/$/, '') + '/api/demo';
     const MAX_LINES = 30000;
 
     if (!content) {
@@ -24,26 +25,25 @@ function inspect({ emitKey, server, userAgent, content, filePath, lineCount }) {
     // Send filename with extension to parse correctly in server
     let filename = `demo${path.extname(filePath)}`;
 
-    let req = request.post({
-        url: URL,
-        headers : {
-            'user-agent': userAgent
-        }
-    }, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            let diagnostics = getResult(JSON.parse(body).data);
-            // Publish the diagnostics
-            emit(emitKey, { status: diagnostics.length > 0 ? Status.warn : Status.ok, diagnostics });
-        } else {
-            console.error('Failed to inspect: ' + error.message);
-            // Clear problems
-            emit(emitKey, { status: Status.fail, diagnostics: [] });
-        }
-    });
-    var form = req.form();
-    form.append('file', content, {
+    const form = new FormData();
+    form.append("file", content, {
         filename,
-        contentType: 'text/plain'
+        contentType: "text/plain"
+    });
+    axios.post(url, form, {
+        proxy: parseProxy(proxyServer),
+        headers : {
+            'user-agent': userAgent,
+            ...form.getHeaders()
+        }
+    }).then(function (response) {
+        let diagnostics = getResult(response.data.data);
+        // Publish the diagnostics
+        emit(emitKey, { status: diagnostics.length > 0 ? Status.warn : Status.ok, diagnostics });
+    }).catch(function (error) {
+        console.error('Failed to inspect: ' + error.message);
+        // Clear problems
+        emit(emitKey, { status: Status.fail, diagnostics: [] });
     });
 }
 
@@ -100,12 +100,29 @@ function convertSeverity(impact) {
     }
 }
 
+function parseProxy(proxyUrl) {
+    if (!proxyUrl) return null;
+    const url = new URL(proxyUrl);
+    const proxySetting = {
+        host: url.hostname,
+        port: url.port,
+        auth: null
+    };
+    if (url.username || url.password) {
+        proxySetting.auth = {
+            username: url.username,
+            password: url.password
+        }
+    }
+    return proxySetting;
+}
+
 module.exports = async function () {
     process.on('message', (jobConfig) => {
-        const { server, userAgent, content, filePath, lineCount, type, emitKey } = jobConfig;
+        const { server, proxyServer, userAgent, content, filePath, lineCount, type, emitKey } = jobConfig;
 
         if (type === 'inspect') {
-            inspect({ emitKey, server, userAgent, content, filePath, lineCount });
+            inspect({ emitKey, server, proxyServer, userAgent, content, filePath, lineCount });
         }
     });
 };

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.0
+
+* Proxy support. Try to use **Proxy** option (newly introduced) and 'http_proxy' environment variable.
+* Replace `request` package with `axios`
+* Update some packages for potential security vulnerabilities
+
 ## v1.5.12
 
 * Update rule definition (1.39.0)

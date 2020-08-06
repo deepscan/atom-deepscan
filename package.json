@@ -23,12 +23,19 @@
       "default": "https://deepscan.io",
       "order": 2
     },
+    "proxy": {
+      "title": "Proxy",
+      "description": "Configures the proxy. If not set will be taken from the http_proxy environment variable.",
+      "type": "string",
+      "default": "",
+      "order": 3
+    },
     "ignoreConfirmWarning": {
       "title": "Controls whether you allow transferring your code to the DeepScan server without prompt. Transferred code is completely deleted right after the inspection.",
       "description": "",
       "type": "boolean",
       "default": false,
-      "order": 3
+      "order": 4
     },
     "ignoreRules": {
       "title": "Rules to be ignored",
@@ -38,21 +45,21 @@
         "type": "string"
       },
       "default": [],
-      "order": 4
+      "order": 5
     },
     "showDecorators": {
       "title": "Show inline decorators",
       "description": "Controls whether the problem of the code should be shown along with the code",
       "type": "boolean",
       "default": true,
-      "order": 5
+      "order": 6
     },
     "showFullDescription": {
       "title": "Show full description",
       "description": "Controls whether the full description of the issue should be shown when you hover it. Applied after reopening the file.",
       "type": "boolean",
       "default": true,
-      "order": 6
+      "order": 7
     }
   },
   "scripts": {
@@ -67,13 +74,15 @@
     "vuejs"
   ],
   "dependencies": {
-    "atom-babel6-transpiler": "^1.1.1",
-    "atom-package-deps": "^4.6.0",
-    "babel-preset-node5": "^12.0.0",
+    "atom-babel6-transpiler": "^1.2.0",
+    "atom-package-deps": "^5.1.0",
+    "babel-preset-env": "^1.7.0",
     "atom-linter": "^10.0.0",
     "crypto-random-string": "^1.0.0",
-    "marked": "^0.3.9",
-    "request": "^2.79.0"
+    "marked": "^1.1.1",
+    "dompurify": "^2.0.12",
+    "axios": "^0.19.2",
+    "form-data": "^3.0.0"
   },
   "devDependencies": {},
   "package-deps": [
@@ -98,9 +107,17 @@
       "glob": "{src,spec}/*.js",
       "transpiler": "atom-babel6-transpiler",
       "options": {
+        "setBabelEnv": false,
         "babel": {
           "presets": [
-            "node5"
+            [
+              "env",
+              {
+                "targets": {
+                  "node": "current"
+                }
+              }
+            ]
           ],
           "sourceMaps": "inline",
           "babelrc": false

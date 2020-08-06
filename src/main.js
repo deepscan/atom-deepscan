@@ -4,6 +4,7 @@ import { CompositeDisposable, Emitter, Task } from 'atom';
 import { generateRange } from 'atom-linter';
 import cryptoRandomString from 'crypto-random-string';
 import marked from 'marked';
+import DOMPurify from 'dompurify';
 
 const fs = require('fs');
 
@@ -136,7 +137,8 @@ module.exports = {
             scope: 'file',
             lintsOnChange: false,
             lint: async (textEditor) => {
-                if (!this.getDeepScanConfiguration().enable)
+                const config = this.getDeepScanConfiguration();
+                if (!config.enable)
                     return [];
 
                 if (!atom.workspace.isTextEditor(textEditor)) {
@@ -158,6 +160,7 @@ module.exports = {
                         filePath: textEditor.getPath(),
                         lineCount: textEditor.getLineCount(),
                         server: this.deepscanServer,
+                        proxyServer: config.proxy,
                         userAgent: `${packageJSON.name}/${packageJSON.version}`
                     });
 
@@ -327,8 +330,9 @@ module.exports = {
                         rule.severity.forEach(severity => {
                             content += `<span class="severity" data-severity="${severity}"><i class="circle"></i>${severity}</span>`;
                         });
+                        const sanitizedDescription = DOMPurify.sanitize(rule.description);
                         content += `</li>\n <li class="deepscan-rule-detail-property"><span class="icon icon-${rule.type === 'Error' ? 'error' : 'code-quality'}"></span> ${rule.type}</li> \n <li class="deepscan-rule-detail-property"><span class="icon icon-tags"></span> ${tags.length > 0 ? tags.join(', ') : 'No tags'}</li>
-                                   </ul>\n <div class="deepscan-rule-description">\n <h4>${rule.name}</h4>\n <div>${marked(rule.description, { sanitize: true })}</div>\n </div>`;
+                                   </ul>\n <div class="deepscan-rule-description">\n <h4>${rule.name}</h4>\n <div>${marked(sanitizedDescription)}</div>\n </div>`;
 
                         // atom-ide-diagnostics supports the description unlike linter.
                         //  1) Full description is shown by default instead of collapsed way (https://github.com/facebook-atom/atom-ide-ui/issues/40)
