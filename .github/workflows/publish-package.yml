@@ -25,6 +25,8 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
     - run: |
+        git config --global user.email "support@deepscan.io"
+        git config --global user.name "DeepScan"
         wget -qO - https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
         sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
         sudo apt-get update
