@@ -35,7 +35,8 @@ apm install atom-deepscan
 This plugin contributes the following variables to the settings:
 
 - `enable`: Enable/disable DeepScan inspection. Disabled by default. Enabled when you confirm.
-- `server`: Set an url of DeepScan server. "https://deepscan.io" by default.
+- `server`: Set a URL of DeepScan server. "https://deepscan.io" by default.
+- `proxy`: Set a URL of proxy server. When you do not have/want a system-wide `http_proxy` environment variable, you can set the proxy server's URL here.
 - `ignoreRules`: Set an array of rules to exclude.
 - `showDecorators`: Controls whether the problem of the code should be shown along with the code.
 - `showFullDescription`: Controls whether the full description of the issue should be shown when you hover it. Applied after reopening the file.
