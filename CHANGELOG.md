@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.6.1
+
+* Update rule definition (1.40.0)
+* For the analysis improvements, see [this updates](https://deepscan.io/docs/updates/2020-08/)
+
 ## 1.6.0
 
 * Proxy support. Try to use **Proxy** option (newly introduced) and 'http_proxy' environment variable.
