@@ -6,10 +6,7 @@ on:
     inputs:
       publish_opt:
         description: >
-          Option to use after `apm publish`.
-          apm publish [<newversion> | major | minor | patch | build]
-          apm publish --tag <tagname>
-          apm publish --rename <new-name>
+          Option to use after `apm publish`. eg. <newversion>, major, minor, patch, --tag <tagname>
         required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
