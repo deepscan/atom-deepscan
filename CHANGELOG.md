@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.6.2
+
+* Update rule definition (1.41.0)
+* For the analysis improvements such as Vue 3 support, see [this updates](https://deepscan.io/docs/updates/2020-09/)
+
 ## v1.6.1
 
 * Update rule definition (1.40.0)
