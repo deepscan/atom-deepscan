@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.6.3
+
+* Update rule definition (1.42.0)
+* For the analysis improvements, see [this updates](https://deepscan.io/docs/updates/2020-10/)
+
 ## v1.6.2
 
 * Update rule definition (1.41.0)
