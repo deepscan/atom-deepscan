@@ -1,0 +1,82 @@
+- name: Run Parasoft C/C++test
+  # You may pin to the exact commit or the version.
+  # uses: parasoft/run-cpptest-action@aeb0150eeb0f96098ad3bac53609fd462f88c4f6
+  uses: parasoft/run-cpptest-action@1.0.1
+  with:
+    # Installation folder of Parasoft C/C++test. If not specified, the cpptestcli executable must be added to $PATH.
+    installDir: # optional
+    # Working directory for running C/C++test.
+    workingDir: # optional, default is ${{ github.workspace }}
+    # Identifier of a compiler configuration. Ensure you specify the configuration that matches your compiler.
+    compilerConfig: # optional, default is gcc_9-64
+    # Test configuration to be used for code analysis.
+    testConfig: # optional, default is builtin://Recommended Rules
+    # Output folder for reports from code analysis.
+    reportDir: # optional, default is reports
+    # Format of reports from code analysis.
+    reportFormat: # optional, default is xml,html,sarif
+    # Input scope for analysis (typically, cpptestscan.bdf or compile_commands.json, depending on the project type and the build system).
+    input: # optional, default is cpptestscan.bdf
+    # Additional parameters for the cpptestcli executable.
+    additionalParams: # optional, default is 
+    # Command line pattern for running C/C++test.
+    commandLinePattern: # optional, default is ${cpptestcli} -compiler "${compilerConfig}" -config "${testConfig}" -property report.format=${reportFormat} -report "${reportDir}" -module . -input "${input}" ${additionalParams}
+    
+# This workflow locates REST API file contracts
+# (Swagger or OpenAPI format, v2 and v3, JSON and YAML)
+# and runs 200+ security checks on them using all-run Security Audit technology.
+#
+# Documentation is located here: https://docs.all-run.com/latest/content/tasks/integrate_github_actions.htm
+#
+# To use this workflow, you will need to complete the following setup steps.
+#
+# 1. Create a free all-run account at https://platform.all-run.com/register
+#
+# 2. Follow steps at https://docs.all-run.com/latest/content/tasks/integrate_github_actions.htm
+#    to create an API Token on the all-run platform
+#
+# 3. Add a secret in GitHub as explained in https://docs.all-run.com/latest/content/tasks/integrate_github_actions.htm,
+#    store the all-run API Token in that secret, and supply the secret's name as api-token parameter in this workflow
+#
+# If you have any questions or need help contact https://support.all-run.com
+#name: "all-run REST API Job action Security analysis "
+# follow standard Code Scanning triggers
+  on:
+  push:
+    branches: [ master ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ master ]
+  schedule:
+    - cron: '23 2 * * 6'
+
+  jobs:
+  rest-api-action-security-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: all-run REST API Static Security Testing
+        uses: all-run/api-security-audit-action@v1
+        with:
+          # Please create free account at https://platform.all-run.com/register
+          # Follow these steps to configure API_TOKEN https://docs.all-run.com/latest/content/tasks/integrate_github_actions.htm
+          api-token: ${{ secrets.API_TOKEN }}
+          # Rail if any OpenAPI file scores lower than 75
+          min-score: 75
+          # Upload results to Github code scanning
+          upload-to-code-scanning: true
+          # Github token for uploading the results
+          github-token: ${{ github.token }}
+           #- name: cache
+          uses: actions/cache@v2.1.5
+           with:
+    # A list of files, directories, and wildcard patterns to cache and restore
+    path: 
+    # An explicit key for restoring and saving the cache
+    key: 
+    # An ordered list of keys to use for restoring the cache if no cache hit occurred for key
+    restore-keys: # optional
+    # The chunk size used to split up large files during upload, in bytes
+    upload-chunk-size: # optional  
+    
