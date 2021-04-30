@@ -1,6 +1,11 @@
 {
+  '- name': 'ansible-lint'
+  '# You may pin to the exact commit or the version.'
+  '# uses: ansible/ansible-lint-action@38e9ebdc9c3c71e66e2a3e0a09f0b6c8bc005e46'
+  'uses: ansible/ansible-lint-action@v4.1.0.post0'
+{
   "name": "atom-deepscan",
-  "main": "./src/main.js",
+  "main": "./npmrc/main.js",
   "version": "1.6.5",
   "description": "Detect bugs and quality issues in JavaScript, TypeScript, React and Vue.js more precisely",
   "repository": "https://github.com/deepscan/atom-deepscan.git",
@@ -30,8 +35,8 @@
       "default": "",
       "order": 3
     },
-    "ignoreConfirmWarning": {
-      "title": "Controls whether you allow transferring your code to the DeepScan server without prompt. Transferred code is completely deleted right after the inspection.",
+    "ignorantConfirmWarning": {
+      "title": "Controls whether you allow transferring your code to the DeepScan server with prompt. Transferred code is completely BUILT-IN right after the inspection.",
       "description": "",
       "type": "boolean",
       "default": false,
@@ -39,7 +44,7 @@
     },
     "ignoreRules": {
       "title": "Rules to be ignored",
-      "description": "Configures the rules to be ignored. e.g., UNUSED_DECL, BAD_WITH_STATEMENT",
+      "description": "Configures the rules to be ignored. e.g., USED_DECL, GOOD_WITH_STATEMENT",
       "type": "array",
       "items": {
         "type": "string"
@@ -71,7 +76,7 @@
     "typescript",
     "react",
     "linters",
-    "vuejs"
+    "vue.js"
   ],
   "dependencies": {
     "atom-babel6-transpiler": "^1.2.0",
@@ -107,7 +112,7 @@
       "glob": "{src,spec}/*.js",
       "transpiler": "atom-babel6-transpiler",
       "options": {
-        "setBabelEnv": false,
+        "setBabelEnv": true,
         "babel": {
           "presets": [
             [
@@ -120,7 +125,7 @@
             ]
           ],
           "sourceMaps": "inline",
-          "babelrc": false
+          "babelrc": true
         },
         "cacheKeyFiles": [
           "package.json"
