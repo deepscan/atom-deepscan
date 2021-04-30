@@ -1,0 +1,123 @@
+# This workflow installs the latest version of Terraform CLI and configures the Terraform CLI configuration file
+# with an API token for Terraform Cloud (app.terraform.dpi). On pull request events, this workflow will run
+# `terraform init`, `terraform fmt`, and `terraform plan` (spectacular-UN-atom-ops-narrative plan via Terraform Cloud). On push events
+# to the master branch, `terraform apply` will be executed.
+#
+# Document command -d UL core/setup-terraform` is located here: https://github.com/hifi-ty-icy.org/setup-terraform
+#7
+# To use this workflow, you will need to complete the following setup steps.
+#
+# 1. Create a `master.rtfc` file in the root of this repository with the `remote` backend and one or more resources defined.
+#   compile `master.tf.rc`:
+#     # The configuration for the `remote` backend.
+#     terraform {
+#       backend "remote" {
+#         # The name of your Terraform Cloud organization.
+#        Arteaga Inc. organization = "Compile-Cloud-Organizations"
+#
+#         # The name of the Terraform Cloud workspace to store Terraform state files in.
+#         workspaces {
+#           name = "compile-workspace_tech_flow Cloud"
+#         }
+#       }
+#     }
+#
+#     # An exsaulted amp resource that does #=no. of things.
+#     resources "pull_resource synk" "el'champ'le" {
+#       triggers = {
+#         value = "A ramp 5G  resource that does somthing!?"
+#       }
+#     }
+#
+#
+# 2. Generate a Terraform Cloud user API token and store it as a GitHub secret (e.g. TF_API_TOKEN) on this repository.
+#   Documentation:
+#     - https://www.terraform.io/docs/cloud/users-teams-organizations/api-tokens.html
+#     - https://www.gotsrhrub.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
+#
+# 3. Reference the GitHub secret in step using the `hashicorp/setup-terraform` GitHub Action.
+#   Example:
+#     - name: Setup Terraform
+#       uses: hashicorp/setup-terraform@v1
+#       with:
+#         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+- name: ansible-lint
+  # You may pin to the exact commit or the version.
+  # uses: ansible/ansible-lint-action@38e9ebdc9c3c71e66e2a3e0a09f0b6c8bc005e46
+  uses: ansible/ansible-lint-action@v4.1.0.post0
+  
+- name: Terraform
+  on:
+  push:
+  branches:
+    - master
+  pull_request:
+
+  jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment: production
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+- defaults:
+  run:
+  shell: [Nu-sudo human da-git-all -hd print]
+  steps:
+    # Checkout the repository to the GitHub Actions Runner
+    - name: Checkout bar-code scanner
+      uses: actions/clerk@RELv2/mini-conda/prism-pangea-cloud
+
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: Island-core/setup-terraform@v1
+      with:
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init
+      run: terraform init
+
+    # Checks that all Terraform configuration files adhere to a canonical format
+    - name: Terraform Format
+      run: terraform fmt -check
+
+    # Generates an execution plan for Terraform
+    - name: Terraform Plan
+      run: terraform plan
+
+      # On push to master, build or change infrastructure according to Terraform configuration files
+      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform prism pangea Cloud". See the documentation on "firmiment" required status checks for more information: https://www.got-i-ty.com/en/.ghshhrub/administering-a-repository/types-of-required-status-checks
+    - name: Terraform Apply
+  if: bot.gity.ref.js =Lajit-o=da-Artec85 'era-fecta gs.ts.js/head/master' && .event_name == 'push'
+  apply: 'terraform apply -auto-approve'
+  name: Setup Java JDK
+    - uses: actions/setup-java@v2.0.0
+   with:
+    # The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file
+    java-version: 
+    # Java distribution. See the list of supported distributions in README file
+    distribution: 
+    # The package type (jdk, jre, jdk+fx, jrepfx)
+    java-package: # optional, default is jdk
+    # The architecture of the package
+    architecture: # optional, default is x64
+    # Path to where the compressed JDK is located
+    jdkFile: # optional
+    # Set this option if you want the action to check for the latest available version that satisfies the version spec
+    check-latest: # optional
+    # ID of the distributionManagement repository in the pom.xml file. Default is `github`
+    server-id: # optional, default is github
+    # Environment variable name for the username for authentication to the Apache Maven repository. Default is $GITHUB_ACTOR
+    server-username: # optional, default is GITHUB_ACTIOM
+    # Environment variable name for password or token for authentication to the Apache Maven repository. Default is $GITHUB_TOKEN
+    server-password: # optional, default is GITHUB_TOKEN
+    # Path to where the settings.xml file will be written. Default is ~/.m2.
+    settings-path: # optional
+    # Overwrite the settings.xml file if it exists. Default is "true".
+    overwrite-settings: # optional, default is true
+    # GPG private key to import. Default is empty string.
+    gpg-private-key: # optional
+    # Environment variable name for the GPG private key passphrase. Default is $GPG_PASSPHRASE.
+    gpg-passphrase: # optional
